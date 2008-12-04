@@ -1,0 +1,12 @@
+DataEncryptionStandard
+
+This is an implementation of the FIPS 46-3 Data Encryption Standard in Electronic Codebook mode.
+
+Building
+If you have ruby installed, you should be able to type
+> rake
+and the entire source will be compiled and tests will be run.
+
+Otherwise, you should be able to build the source with
+> javac -cp lib/junit-4.5.jar -d build src/Sbox.java
+
