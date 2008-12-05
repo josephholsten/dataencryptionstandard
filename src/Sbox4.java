@@ -9,9 +9,6 @@ public class Sbox4 extends Sbox {
   };
   
   public static String call(String string) {
-    //Create a substring of 6bits
-    String substring = string.substring(18,23);
-    
     return sbox(string, sb);
   }
 }

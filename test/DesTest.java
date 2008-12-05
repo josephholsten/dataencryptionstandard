@@ -37,12 +37,160 @@ encryptDES(675a69675e5a6b5a)
   FP:	L=974affbf, R=86022d1f
  returns 974affbf86022d1f
 
-974affbf86022d1f
 */
 
 public class DesTest {
   @Test
 	public void testTrue() {}
+	
+	@Test
+	public void shouldCalculateSimpleE() {
+	  int[] input = {
+	    0, 0, 0, 0,  0, 0, 0, 0,
+	    0, 0, 0, 0,  0, 0, 0, 0,
+	    0, 0, 0, 0,  0, 0, 0, 0,
+	    0, 0, 0, 0,  0, 0, 0, 1
+	  }; 
+	  int[] expected = {
+	    1, 0, 0,  0, 0, 0,
+	    0, 0, 0,  0, 0, 0,
+	    0, 0, 0,  0, 0, 0,
+	    0, 0, 0,  0, 0, 0,
+	    
+	    0, 0, 0,  0, 0, 0,
+	    0, 0, 0,  0, 0, 0,
+	    0, 0, 0,  0, 0, 0,
+	    0, 0, 0,  0, 1, 0
+	  };
+	  int[] result = BitSelection.call(input);
+	  
+    for (int i = 0; i < 48; i++)
+      assertEquals("i:"+ i, expected[i], result[i]);
+	}
 
+  @Test
+  public void shouldCalculateFullEncryption() {
+    // 5B5A57676A56676E
+    int[] key = {
+      0, 1, 0, 1,  1, 0, 1, 1,
+      0, 1, 0, 1,  1, 0, 1, 0,
+      0, 1, 0, 1,  0, 1, 1, 1,
+      0, 1, 1, 0,  0, 1, 1, 1,
+    
+      0, 1, 1, 0,  1, 0, 1, 0,
+      0, 1, 0, 1,  0, 1, 1, 0,
+      0, 1, 1, 0,  0, 1, 1, 1,
+      0, 1, 1, 0,  1, 1, 1, 0
+    };
+    // 675A69675E5A6B5A
+    int[] plaintext = {
+      0, 1, 1, 0, 0, 1, 1, 1,
+      0, 1, 0, 1, 1, 0, 1, 0,
+      0, 1, 1, 0, 1, 0, 0, 1,
+      0, 1, 1, 0, 0, 1, 1, 1,
+      0, 1, 0, 1, 1, 1, 1, 0,
+      0, 1, 0, 1, 1, 0, 1, 0,
+      0, 1, 1, 0, 1, 0, 1, 1,
+      0, 1, 0, 1, 1, 0, 1, 0
+    };
+    
+    // 746fc91a
+    int[] expected = {
+      1, 0, 0, 1, 0, 1, 1, 1,
+      0, 1, 0, 0, 1, 0, 1, 0,
+      1, 1, 1, 1, 1, 1, 1, 1,
+      1, 0, 1, 1, 1, 1, 1, 1,
+      1, 0, 0, 0, 0, 1, 1, 0,
+      0, 0, 0, 0, 0, 0, 1, 0,
+      0, 0, 1, 0, 1, 1, 0, 1,
+      0, 0, 0, 1, 1, 1, 1, 1
+    };
+    
+    assertArrayEquals(expected, CipherFunction.desEncrypt(plaintext, key));
+  }
   
+  @Test
+  public void shouldCalculateRoundEndToEnd() {
+    // 5B5A57676A56676E
+    int[] key = {
+      0, 1, 0, 1,  1, 0, 1, 1,
+      0, 1, 0, 1,  1, 0, 1, 0,
+      0, 1, 0, 1,  0, 1, 1, 1,
+      0, 1, 1, 0,  0, 1, 1, 1,
+      0, 1, 1, 0,  1, 0, 1, 0,
+      0, 1, 0, 1,  0, 1, 1, 0,
+      0, 1, 1, 0,  0, 1, 1, 1,
+      0, 1, 1, 0,  1, 1, 1, 0
+    };
+    
+    int[][] subkeys = KeySequence.generate(key);
+    
+        
+    // f(R0=004df6fb, SK1=38 09 1b 26 2f 3a 27 0f ) = 746fc91a
+
+    // 004df6fb
+    int[] r = {
+      0, 0, 0, 0,  0, 0, 0, 0,
+      0, 1, 0, 0,  1, 1, 0, 1,
+      1, 1, 1, 1,  0, 1, 1, 0,
+      1, 1, 1, 1,  1, 0, 1, 1
+    };
+    int[] finalInts = CipherFunction.roundCipher(r, subkeys[0]);
+    // 746fc91a
+    int[] expected = {
+      0, 1, 1, 1,  0, 1, 0, 0,
+      0, 1, 1, 0,  1, 1, 1, 1,
+      1, 1, 0, 0,  1, 0, 0, 1,
+      0, 0, 0, 1,  1, 0, 1, 0
+    };
+    assertArrayEquals("result", expected, finalInts);
+  }
+  
+  @Test
+  public void shouldLeftShift() {
+    int[] input    = {1, 0, 0, 0, 1, 0, 0, 0};
+    int[] expected = {0, 0, 0, 1, 0, 0, 0, 1};
+    int[] result   = KeySequence.leftShift(input);
+    
+    assertArrayEquals(expected, result);
+  }
+  
+  @Test
+  public void shouldGenerateSimpleKey1() {
+      int[] input = {
+        1, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0,
+                          0,
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0
+      };
+    int[][] result = KeySequence.generate(input);
+
+    int[] expected = {
+      0, 0, 0, 0, 0, 0, //  1- 6
+      0, 0, 0, 0, 0, 0, //  7-12
+      0, 0, 0, 0, 0, 0, // 11-18
+      0, 1, 0, 0, 0, 0, // 19-24
+      0, 0, 0, 0, 0, 0, // 25-30
+      0, 0, 0, 0, 0, 0, // 31-36
+      0, 0, 0, 0, 0, 0, // 37-42
+      0, 0, 0, 0, 0, 0  // 43-48
+    };
+    assertArrayEquals(expected, result[0]);
+  }
+  @Test
+  public void shouldPrettyPrint() {
+    int[] input = {1, 0, 0, 0, 0, 0, 0, 0};
+    assertEquals("80", CipherFunction.pretty(input));
+  }
+  
+  @Test
+  public void shouldPrettyPrintMore() {
+    int[] input = {1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0};
+    assertEquals("8080", CipherFunction.pretty(input));
+  }
 }
