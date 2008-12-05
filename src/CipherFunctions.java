@@ -11,14 +11,16 @@ public class CipherFunctions {
     return tempsubkeyarray;
   }
 
-/*        public static String xorWithSubkey(tempsubkeyarray, ER) {
-          //Now XOR the ER string with the subkey for the round
-          for(int i=0;i<48;i++){
-              if((tempsubkeyarray[i]==1&&ER[i]==0)||(tempsubkeyarray[i]==0&&ER[i]==1))
-                   uberstring=uberstring.concat("1");   
-              else
-                  uberstring=uberstring.concat("0");
-          }
-          return uberstring;
-        }*/
+  // XOR the ER string with the subkey for the round
+  public static String xorWithSubkey(int[] tempsubkeyarray, int[] er) {
+    String result = new String();
+    
+    for(int i=0; i<48; i++){
+      if((tempsubkeyarray[i]==1 && er[i]==0)||(tempsubkeyarray[i]==0 && er[i]==1))
+        result = result.concat("1");   
+      else
+       result = result.concat("0");
+    }
+    return result;
+  }
 }
