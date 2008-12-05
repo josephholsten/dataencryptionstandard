@@ -1,15 +1,14 @@
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import edu.okstate.cs.des.Sbox;
+package edu.okstate.cs.des.tests;
 
-public class SboxTest extends TestCase {
-	@Override
-	protected void setUp() {
-	}
-	public static Test suite() {
-		return new TestSuite(SboxTest.class);
-	}
+import org.junit.*;
+import static org.junit.Assert.*;
+import java.util.*;
+
+import edu.okstate.cs.des.Sbox;
+import edu.okstate.cs.des.Sbox1;
+
+public class SboxTest {
+  @Test
 	public void testI() {
     assertEquals(3, Sbox.i(0x3f)); /* 1111111 => 3 */
     assertEquals(3, Sbox.i(0x21)); /* 1000001 => 3 */
@@ -20,7 +19,7 @@ public class SboxTest extends TestCase {
     assertEquals(0, Sbox.i(0x1e)); /* 0111110 => 0 */
     assertEquals(0, Sbox.i(0x00)); /* 0000000 => 0 */
 	}
-	
+	@Test
   public void testJ() {
     assertEquals( 0, Sbox.j(0x00));  /* 000000 => 0 */
     assertEquals( 1, Sbox.j(0x02));  /* 000010 => 1 */
@@ -40,35 +39,33 @@ public class SboxTest extends TestCase {
     assertEquals(14, Sbox.j(0x1C)); /* 011100 => E */
     assertEquals(15, Sbox.j(0x1E)); /* 011110 => F */
   }
+  @Test
   public void testS1(){
-    assertEquals(14, Sbox.s1(0x00));
-    assertEquals( 0, Sbox.s1(0x01));
-    assertEquals( 4, Sbox.s1(0x02));
-    assertEquals(15, Sbox.s1(0x03));
-    assertEquals(13, Sbox.s1(0x04));
-    assertEquals( 7, Sbox.s1(0x05));
-    assertEquals( 1, Sbox.s1(0x06));
-    assertEquals( 4, Sbox.s1(0x07));
-    assertEquals( 2, Sbox.s1(0x08));
-    assertEquals(14, Sbox.s1(0x09));
-    assertEquals(15, Sbox.s1(0x0A));
-    assertEquals( 2, Sbox.s1(0x0B));
-    assertEquals(11, Sbox.s1(0x0C));
-    assertEquals(13, Sbox.s1(0x0D));
-    assertEquals( 8, Sbox.s1(0x0E));
-    assertEquals( 1, Sbox.s1(0x0F));
-    assertEquals( 3, Sbox.s1(0x10));
-    assertEquals(10, Sbox.s1(0x11));
-    assertEquals(10, Sbox.s1(0x12));
-    assertEquals( 6, Sbox.s1(0x13));
-    assertEquals( 6, Sbox.s1(0x14));
-    assertEquals(12, Sbox.s1(0x15));
-    assertEquals(12, Sbox.s1(0x16));
-    assertEquals( 5, Sbox.s1(0x1B)); /* 011011 */
-    assertEquals( 4, Sbox.s1(0x20));
-    assertEquals(15, Sbox.s1(0x21));
+    assertEquals(14, Sbox1.sub(0x00));
+    assertEquals( 0, Sbox1.sub(0x01));
+    assertEquals( 4, Sbox1.sub(0x02));
+    assertEquals(15, Sbox1.sub(0x03));
+    assertEquals(13, Sbox1.sub(0x04));
+    assertEquals( 7, Sbox1.sub(0x05));
+    assertEquals( 1, Sbox1.sub(0x06));
+    assertEquals( 4, Sbox1.sub(0x07));
+    assertEquals( 2, Sbox1.sub(0x08));
+    assertEquals(14, Sbox1.sub(0x09));
+    assertEquals(15, Sbox1.sub(0x0A));
+    assertEquals( 2, Sbox1.sub(0x0B));
+    assertEquals(11, Sbox1.sub(0x0C));
+    assertEquals(13, Sbox1.sub(0x0D));
+    assertEquals( 8, Sbox1.sub(0x0E));
+    assertEquals( 1, Sbox1.sub(0x0F));
+    assertEquals( 3, Sbox1.sub(0x10));
+    assertEquals(10, Sbox1.sub(0x11));
+    assertEquals(10, Sbox1.sub(0x12));
+    assertEquals( 6, Sbox1.sub(0x13));
+    assertEquals( 6, Sbox1.sub(0x14));
+    assertEquals(12, Sbox1.sub(0x15));
+    assertEquals(12, Sbox1.sub(0x16));
+    assertEquals( 5, Sbox1.sub(0x1B)); /* 011011 */
+    assertEquals( 4, Sbox1.sub(0x20));
+    assertEquals(15, Sbox1.sub(0x21));
   }
-	public static void main (String[] args) {
-		junit.textui.TestRunner.run(suite());
-	}
 } 
