@@ -1,6 +1,6 @@
 require 'rake/clean'
 
-task :default => [:build, :build_tests, :test]
+task :default => [:test]
 
 CLOBBER.add('build', 'doc')
 
@@ -55,5 +55,5 @@ end
 desc "Generate documentation" 
 directory 'doc'
 file 'doc' => [SOURCES] do
-  sh "javadoc -d doc"
+  sh "javadoc -d doc #{SOURCES}"
 end

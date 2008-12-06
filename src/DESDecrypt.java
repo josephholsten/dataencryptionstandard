@@ -4,7 +4,7 @@ package edu.okstate.cs.des;
  * for plaintext of a set size of 64bits
  * @author Jason
  */
-public class DESEncrypt {
+public class DESDecrypt {
     
     public static void main(String[]args){
         //The hex key that the key sheduler uses to create

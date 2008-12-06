@@ -109,6 +109,47 @@ public class DesTest {
     assertArrayEquals(expected, CipherFunction.desEncrypt(plaintext, key));
   }
   
+  
+  @Test
+  public void shouldCalculateFullDecryption() {
+    // 5B5A57676A56676E
+    int[] key = {
+      0, 1, 0, 1,  1, 0, 1, 1,
+      0, 1, 0, 1,  1, 0, 1, 0,
+      0, 1, 0, 1,  0, 1, 1, 1,
+      0, 1, 1, 0,  0, 1, 1, 1,
+    
+      0, 1, 1, 0,  1, 0, 1, 0,
+      0, 1, 0, 1,  0, 1, 1, 0,
+      0, 1, 1, 0,  0, 1, 1, 1,
+      0, 1, 1, 0,  1, 1, 1, 0
+    };
+    // 746fc91a
+    int[] ciphertext = {
+      1, 0, 0, 1, 0, 1, 1, 1,
+      0, 1, 0, 0, 1, 0, 1, 0,
+      1, 1, 1, 1, 1, 1, 1, 1,
+      1, 0, 1, 1, 1, 1, 1, 1,
+      1, 0, 0, 0, 0, 1, 1, 0,
+      0, 0, 0, 0, 0, 0, 1, 0,
+      0, 0, 1, 0, 1, 1, 0, 1,
+      0, 0, 0, 1, 1, 1, 1, 1
+    };
+    // 675A69675E5A6B5A
+    int[] expected = {
+      0, 1, 1, 0, 0, 1, 1, 1,
+      0, 1, 0, 1, 1, 0, 1, 0,
+      0, 1, 1, 0, 1, 0, 0, 1,
+      0, 1, 1, 0, 0, 1, 1, 1,
+      0, 1, 0, 1, 1, 1, 1, 0,
+      0, 1, 0, 1, 1, 0, 1, 0,
+      0, 1, 1, 0, 1, 0, 1, 1,
+      0, 1, 0, 1, 1, 0, 1, 0
+    };
+    
+    assertArrayEquals(expected, CipherFunction.desDecrypt(ciphertext, key));
+  }
+
   @Test
   public void shouldCalculateRoundEndToEnd() {
     // 5B5A57676A56676E
@@ -123,7 +164,7 @@ public class DesTest {
       0, 1, 1, 0,  1, 1, 1, 0
     };
     
-    int[][] subkeys = KeySequence.generate(key);
+    int[][] subkeys = KeySequence.getEncryptKeys(key);
     
         
     // f(R0=004df6fb, SK1=38 09 1b 26 2f 3a 27 0f ) = 746fc91a
@@ -147,15 +188,6 @@ public class DesTest {
   }
   
   @Test
-  public void shouldLeftShift() {
-    int[] input    = {1, 0, 0, 0, 1, 0, 0, 0};
-    int[] expected = {0, 0, 0, 1, 0, 0, 0, 1};
-    int[] result   = KeySequence.leftShift(input);
-    
-    assertArrayEquals(expected, result);
-  }
-  
-  @Test
   public void shouldGenerateSimpleKey1() {
       int[] input = {
         1, 0, 0, 0, 0, 0, 0, 0,
@@ -168,7 +200,7 @@ public class DesTest {
         0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0
       };
-    int[][] result = KeySequence.generate(input);
+    int[][] result = KeySequence.getEncryptKeys(input);
 
     int[] expected = {
       0, 0, 0, 0, 0, 0, //  1- 6
@@ -182,15 +214,50 @@ public class DesTest {
     };
     assertArrayEquals(expected, result[0]);
   }
-  @Test
-  public void shouldPrettyPrint() {
-    int[] input = {1, 0, 0, 0, 0, 0, 0, 0};
-    assertEquals("80", CipherFunction.pretty(input));
-  }
   
   @Test
-  public void shouldPrettyPrintMore() {
-    int[] input = {1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0};
-    assertEquals("8080", CipherFunction.pretty(input));
+  public void shouldGenerateEncryptKeys() {
+    
+  }
+  
+  
+  
+  @Test
+  public void shouldPadBitStream() {
+    int[] input = {0, 1, 0, 1, 0, 1, 0, 1};
+    // pad with 7 = 0x0111 bytes
+    int[] expected = {
+      0, 1, 0, 1, 0, 1, 0, 1,
+      0, 0, 0, 0, 0, 1, 1, 1,
+      0, 0, 0, 0, 0, 1, 1, 1,
+      0, 0, 0, 0, 0, 1, 1, 1,
+      0, 0, 0, 0, 0, 1, 1, 1,
+      0, 0, 0, 0, 0, 1, 1, 1,
+      0, 0, 0, 0, 0, 1, 1, 1,
+      0, 0, 0, 0, 0, 1, 1, 1,
+    };
+    assertArrayEquals(expected, PKCS5Padding.enpad(input));
+  }
+  
+  
+  
+  
+  
+  @Test
+  public void shouldDepadBitStream() {
+    // pad with 7 = 0x0111 bytes
+    int[] input = {
+      0, 1, 0, 1, 0, 1, 0, 1,
+      0, 0, 0, 0, 0, 1, 1, 1,
+      0, 0, 0, 0, 0, 1, 1, 1,
+      0, 0, 0, 0, 0, 1, 1, 1,
+      0, 0, 0, 0, 0, 1, 1, 1,
+      0, 0, 0, 0, 0, 1, 1, 1,
+      0, 0, 0, 0, 0, 1, 1, 1,
+      0, 0, 0, 0, 0, 1, 1, 1,
+    };
+    
+    int[] expected = {0, 1, 0, 1, 0, 1, 0, 1};
+    assertArrayEquals(expected, PKCS5Padding.depad(input));
   }
 }

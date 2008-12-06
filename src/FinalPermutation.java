@@ -1,5 +1,10 @@
 package edu.okstate.cs.des;
 
+/**
+ * Implements the standard Final Permutation or
+ * Inverse Initial Permutation (IP^-1) primitive
+ * function for initializing a DES algorithm
+ */
 public class FinalPermutation extends LookupTable {
   public static int[] fp = {
     40, 8, 48, 16, 56, 24, 64, 32,
@@ -12,7 +17,11 @@ public class FinalPermutation extends LookupTable {
     33, 1, 41,  9, 49, 17, 57, 25
   };
   
-  public static int[] call(int[] input){
-    return applyLookup(input, fp);
+  /**
+   * Return the IP function's mapping of the
+   * binary int array for standard blocks R16 and L16
+   */
+  public static int[] call(int[] rl){
+    return applyLookup(rl, fp);
   }
 }

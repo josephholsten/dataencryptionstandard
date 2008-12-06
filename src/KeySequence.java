@@ -1,7 +1,11 @@
 package edu.okstate.cs.des;
 
+/**
+ * This class generates encryption and decryption
+ * key sequences for the DES algorithm
+ */
 public class KeySequence {
-  static public int[] leftShift(int[] input) {
+  static private int[] leftShift(int[] input) {
     int[] result = new int[input.length];
     // beware of fencepost errors, this should eval 
     // all but the last value of input 
@@ -12,18 +16,11 @@ public class KeySequence {
     return result;
   }
   
-  static public int[][] leftShift(int[] c, int[] d) {
-    int[][] result = new int[2][];
-    result[0] = leftShift(c);
-    result[1] = leftShift(d);
-    return result;
-  }
-  
-  static public int[][] leftShift(int[][] input) {
-    return leftShift(input[0], input[1]);
-  }
-
-  static public int[][] generate(int[] key) {
+  /**
+   * Generate the subkey sequence to allow
+   * encryption with the DES algorithm
+   */
+  static public int[][] getEncryptKeys(int[] key) {
     int[] temp;
     int[][] result = new int[16][];
     temp = PermutedChoice1.call(key);
@@ -37,7 +34,8 @@ public class KeySequence {
     
     int[][] cd;
     
-    
+    // This is the standard left-shift
+    // sequence for the DES algorithm
     cd = leftShift(c,d);
     result[0] = generateKey(cd);
     cd = leftShift(cd);
@@ -86,10 +84,40 @@ public class KeySequence {
     return result;
   }
   
-  static public int[] generateKey(int[][] input) {
+  /**
+   * Generate the subkey sequence to allow
+   * decryption with the DES algorithm
+   */
+  static public int[][] getDecryptKeys(int[] key) {
+    int[][] encryptSequence = getEncryptKeys(key);
+    int len = encryptSequence.length;
+    int[][] result = new int[len][];
+    
+    // the des algorithm will decrypt if the
+    // keys are in the reverse order,
+    // so we reverse them
+    for(int i=0; i<len; i++)
+      result[len-1-i] = encryptSequence[i];
+      
+    return result;
+  }
+  
+  
+  static private int[][] leftShift(int[] c, int[] d) {
+    int[][] result = new int[2][];
+    result[0] = leftShift(c);
+    result[1] = leftShift(d);
+    return result;
+  }
+  
+  static private int[][] leftShift(int[][] input) {
+    return leftShift(input[0], input[1]);
+  }
+  
+  static private int[] generateKey(int[][] input) {
     return generateKey(input[0], input[1]);
   }
-  static public int[] generateKey(int[] c, int[] d) {
+  static private int[] generateKey(int[] c, int[] d) {
     int[] result = new int[56];
     for(int i=0; i<result.length/2; i++) {
       result[i] = c[i];

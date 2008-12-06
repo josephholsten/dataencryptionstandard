@@ -1,5 +1,9 @@
 package edu.okstate.cs.des;
 
+/**
+ * Implements the standard Permuted Choice 2 (PC-2) primitive
+ * function for finalizing a DES subkey
+ */
 public class PermutedChoice2 extends LookupTable {
   static public int[] pc2 = {
     14, 17, 11, 24, 1, 5,
@@ -12,7 +16,12 @@ public class PermutedChoice2 extends LookupTable {
     46, 42, 50, 36, 29, 32
   };
   
-  public static int[] call(int[] r) {
-    return applyLookup(r, pc2);
+  
+  /**
+   * Return the PC-2 function's mapping of the
+   * binary int array for standard blocks c and d
+   */
+  public static int[] call(int[] cd) {
+    return applyLookup(cd, pc2);
   }
 }

@@ -1,5 +1,9 @@
 package edu.okstate.cs.des;
 
+/**
+ * Implements the standard Initial Permutation (IP) primitive
+ * function for initializing a DES algorithm
+ */
 public class InitialPermutation extends LookupTable {
   public static int[] ip = {
     58, 50, 42, 34, 26, 18, 10, 2,
@@ -12,6 +16,10 @@ public class InitialPermutation extends LookupTable {
     63, 55, 47, 39, 31, 23, 15, 7
   };
   
+  /**
+   * Return the IP function's mapping of the
+   * binary int array for standard input block
+   */
   public static int[] call(int[] input){
     return applyLookup(input, ip);
   }
