@@ -14,7 +14,7 @@ public abstract class Sbox {
     
     int lookup = sb[x][y];
     
-    return padBinary(lookup, 4);
+    return CipherFunction.padBinary(lookup, 4);
   }
   
   /**
@@ -22,7 +22,7 @@ public abstract class Sbox {
    * of the DES algorithm, 
    */
   public static int[] allSboxes(int[] bs) {
-    String string = intArrayToBinaryString(bs);
+    String string = CipherFunction.intArrayToBinaryString(bs);
     
     StringBuilder result = new StringBuilder();
     //The s functions
@@ -35,7 +35,7 @@ public abstract class Sbox {
     result.append(Sbox7.call(string.substring(36,42)));
     result.append(Sbox8.call(string.substring(42,48)));
     
-    return stringToIntArray(result.toString());
+    return CipherFunction.stringToIntArray(result.toString());
   }
   
   /**
@@ -59,37 +59,4 @@ public abstract class Sbox {
     temp = temp.concat(b.substring(5,6));
     return Integer.parseInt(temp,2);
 	}
-	
-	/**
-	 * Return a binary string representation of i with at
-	 * least the width provided, padding with 0s if necessary
-	 */
-	private static String padBinary(int i, int width) {
-	  String result = Integer.toBinaryString(i);
-	  while (result.length() < width) {
-	    result = "0".concat(result);
-	  }
-	  return result;
-	}
-  
-  /**
-   * Convert from a binary int array to a binary string
-   */
-  private static String intArrayToBinaryString(int[] input) {
-    StringBuilder result = new StringBuilder();
-    for(int i = 0; i < input.length; i++)
-      result.append(Integer.toString(input[i],2));
-    return result.toString();
-  }
-  
-  /**
-   * Convert from a binary string to a binary int array
-   */
-  private static int[] stringToIntArray(String input) {
-    int[] result = new int[input.length()];
-    for(int i = 0; i < input.length(); i++) {
-      result[i] = Integer.parseInt(input.substring(i,i+1));
-    }
-    return result;
-  }
 }

@@ -40,8 +40,6 @@ encryptDES(675a69675e5a6b5a)
 */
 
 public class DesTest {
-  @Test
-	public void testTrue() {}
 	
 	@Test
 	public void shouldCalculateSimpleE() {
@@ -108,7 +106,6 @@ public class DesTest {
     
     assertArrayEquals(expected, CipherFunction.desEncrypt(plaintext, key));
   }
-  
   
   @Test
   public void shouldCalculateFullDecryption() {
@@ -220,8 +217,6 @@ public class DesTest {
     
   }
   
-  
-  
   @Test
   public void shouldPadBitStream() {
     int[] input = {0, 1, 0, 1, 0, 1, 0, 1};
@@ -239,10 +234,6 @@ public class DesTest {
     assertArrayEquals(expected, PKCS5Padding.enpad(input));
   }
   
-  
-  
-  
-  
   @Test
   public void shouldDepadBitStream() {
     // pad with 7 = 0x0111 bytes
@@ -259,5 +250,49 @@ public class DesTest {
     
     int[] expected = {0, 1, 0, 1, 0, 1, 0, 1};
     assertArrayEquals(expected, PKCS5Padding.depad(input));
+  }
+  
+  @Test
+  public void shouldConvertPlaintextString() {
+    String result = CipherFunction.textToBinaryString("testtest");
+    assertEquals(
+    "01110100"+"01100101"+
+    "01110011"+"01110100"+
+    "01110100"+"01100101"+
+    "01110011"+"01110100", result);
+  }
+  
+  
+  @Test
+  public void shouldUnconvertPlaintextString() {
+    String input =
+      "01110100"+"01100101"+
+      "01110011"+"01110100"+
+      "01110100"+"01100101"+
+      "01110011"+"01110100";
+    String result = CipherFunction.binaryStringToText(input);
+    assertEquals("testtest", result);
+  }
+  
+  @Test
+  public void shouldConvertKeyString() {
+    String input = "1112131415161718";
+    String result = CipherFunction.hexToBinaryString(input);
+    assertEquals(
+      "00010001"+"00010010"+
+      "00010011"+"00010100"+
+      "00010101"+"00010110"+
+      "00010111"+"00011000", result);
+  }
+    
+  @Test
+  public void shouldUnconvertHexString() {
+    String input = 
+      "00010001"+"00010010"+
+      "00010011"+"00010100"+
+      "00010101"+"00010110"+
+      "00010111"+"00011000";;
+    String result = CipherFunction.binaryStringToHex(input);
+    assertEquals("1112131415161718", result);
   }
 }

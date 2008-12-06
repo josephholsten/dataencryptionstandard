@@ -1,12 +1,24 @@
-DataEncryptionStandard
+DATA ENCRYPTION STANDARD
 
 This is an implementation of the FIPS 46-3 Data Encryption Standard in Electronic Codebook mode.
 
-Building
+ Building
+==========
 If you have ruby installed, you should be able to type
 > rake
 and the entire source will be compiled and tests will be run.
 
 Otherwise, you should be able to build the source with
-> javac -cp lib/junit-4.5.jar -d build src/Sbox.java
+> javac -d build src/*.java
+
+ Usage
+=======
+To encrypt an eight-byte message, use the command
+> bin/encrypt.sh HereHEAR
+c469c8c7402d42d9
+
+To decrypt an eight-byte hex enco
+ded message, use the command
+> bin/decrypt.sh c469c8c7402d42d9
+HereHEAR
 
